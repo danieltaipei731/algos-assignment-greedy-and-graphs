@@ -1,7 +1,7 @@
 /**
  * Physics Experiment
- * Author: Your Name and Carolyn Yao
- * Does this compile or finish running within 5 seconds? Y/N
+ * Author: Daniel Chang and Carolyn Yao
+ * Does this compile or finish running within 5 seconds? Y
  */
 
 /**
@@ -28,19 +28,43 @@ public class PhysicsExperiment {
    * @return scheduleTable: a table similar to the signUpTable where scheduleTable[X][Y] = 1 means
    *     student X is assigned to step Y in an optimal schedule
    */
-  public int[][] scheduleExperiments(
-    int numStudents,
-    int numSteps,
-    int[][] signUpTable
-  ) {
-    // Your scheduleTable is initialized as all 0's so far. Your code will put 1's
-    // in the table in the right places based on the return description
-    int[][] scheduleTable = new int[numStudents + 1][numSteps + 1];
-
-    // Your code goes here
-
-    return scheduleTable;
-  }
+	public int[][] scheduleExperiments(
+		    int numStudents,
+		    int numSteps,
+		    int[][] signUpTable
+		  ) {
+		    // Your scheduleTable is initialized as all 0's so far. Your code will put 1's
+		    // in the table in the right places based on the return description
+		    int[][] scheduleTable = new int[numStudents + 1][numSteps + 1];
+		    
+		    int current = 1; //The current steps
+		    while(current <= numSteps) { //Exit when every steps are done
+		    	int maxLength = 0; //Keep track the longest consecutive steps
+		    	int row = 0; //Keep track the student
+		    	for(int i = 1; i<=numStudents; i++) {
+		    		int length = 0;
+		    		label:
+		    		for(int j = current; j <=numSteps; j++) {
+		    			if(signUpTable[i][j] != 1) {
+		    				break label;
+		    			}
+		    			else {
+		    				length++;
+		    				if(length > maxLength) { //Update the longest and the student
+		    					maxLength = length;
+		    					row = i;
+		    				}
+		    			}
+		    		}
+		    	}
+		    	for(int k = 0; k < maxLength; k++) {
+		    		scheduleTable[row][current] = 1;
+		    		current++;
+		    	}
+		    }
+		    
+		    return scheduleTable;
+		  }
 
   /**
    * Makes the convenient lookup table based on the steps each student says they can do

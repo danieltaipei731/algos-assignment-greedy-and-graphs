@@ -1,7 +1,7 @@
 /**
  * Public Transit
- * Author: Your Name and Carolyn Yao
- * Does this compile? Y/N
+ * Author: Daniel Chang and Carolyn Yao
+ * Does this compile? N
  */
 
 /**
@@ -34,7 +34,52 @@ public class FastestRoutePublicTransit {
   ) {
     // Your code along with comments here. Feel free to borrow code from any
     // of the existing method. You can also make new helper methods.
-    return 0;
+	  int numVertices = lengths[0].length;
+
+	    // This is the array where we'll store all the final shortest times
+	    int[] times = new int[numVertices];
+
+	    // processed[i] will true if vertex i's shortest time is already finalized
+	    Boolean[] processed = new Boolean[numVertices];
+
+	    // Initialize all distances as INFINITE and processed[] as false
+	    for (int v = 0; v < numVertices; v++) {
+	      times[v] = Integer.MAX_VALUE;
+	      processed[v] = false;
+	    }
+
+	    // Distance of source vertex from itself is always 0
+	    times[S] = startTime;
+	    
+	    //temporary time to store when calculating the various of cases for wait time.
+	    int temp = 0;
+
+	    // Find shortest path to all the vertices
+	    for (int count = 0; count < numVertices - 1 ; count++) {
+	      // Pick the minimum distance vertex from the set of vertices not yet processed.
+	      // u is always equal to source in first iteration.
+	      // Mark u as processed.
+	      int u = findNextToProcess(times, processed);
+	      processed[u] = true;
+
+	      // Update time value of all the adjacent vertices of the picked vertex.
+	      for (int v = 0; v < numVertices; v++) {
+	    	 // Case where first train haven't arrive and wait time for the train to come. 
+	    	 temp = first[u][v] - times[u];
+	    	 temp = times[u] + lengths[u][v] + temp;
+	    	 
+	    	// Case where the first train passed and need to calculate the time for next train.
+	    	// However, I don't know how to calculate the time with collaborating with frequency.
+	    	 
+	        // Update time[v] only if is not processed yet, there is an edge from u to v,
+	        // and total weight of path from source to v through u is smaller than current value of time[v]
+	        if (!processed[v] && lengths[u][v]!=0 && times[u] != Integer.MAX_VALUE && times[u]+lengths[u][v] < times[v]) {
+	          times[v] = times[u] + lengths[u][v];
+	        }
+	      }
+	    }
+	    // Return the duration of the ride.
+	    return times[T]-startTime;
   }
 
   /**
